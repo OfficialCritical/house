@@ -3860,7 +3860,7 @@
 			</div>
 			
 			<div id="formehelye"> 
-				<form id="uzenet_form">
+				<form id="uzenet_form" style="position:relative;">
 					<input type="hidden" name="access_key" value="4727d8fe-d0e8-4c18-b0e5-f91b2bf99504">
 					<input type="hidden" name="subject" value="ST-Management – Árajánlat kérés a weboldalról">
 					<input type="checkbox" name="botcheck" style="display: none;">
@@ -3891,7 +3891,8 @@
 					</div>
 					
 					<button type="submit" id="uzenet_kuldes_btn">Üzenet küldése</button>
-					<div id="uzenet_uzenet" style="min-height: 22px; margin-top: 10px; color: white; font-weight: 600;"></div>
+					<div id="uzenet_uzenet" style="position:absolute; left:40%; bottom:20%; min-height:22px; color:white; font-weight:600; white-space:nowrap;"></div>
+					
 				</form>
 			</div>
 		</div>
@@ -4106,7 +4107,7 @@
 					if (honeypot && honeypot.checked) return;
 
 					btn.disabled = true;
-					msgEl.textContent = 'Küldés folyamatban…';
+					btn.textContent = 'Küldés folyamatban…';
 
 					var payload = Object.fromEntries(new FormData(form));
 
@@ -4118,15 +4119,15 @@
 					.then(function (res) { return res.json(); })
 					.then(function (data) {
 						if (data.success) {
-							msgEl.textContent = 'Üzenet elküldve! Hamarosan jelentkezünk.';
+							btn.textContent = 'Üzenet elküldve! Hamarosan jelentkezünk.';
 							form.reset();
 						} else {
-							msgEl.textContent = 'Hiba: ' + (data.message || 'Ismeretlen hiba');
+							btn.textContent = 'Hiba: ' + (data.message || 'Ismeretlen hiba');
 						}
 					})
 					.catch(function (err) {
 						console.error(err);
-						msgEl.textContent = 'Hiba: ' + (err.message || 'Küldés sikertelen.');
+						btn.textContent = 'Hiba: ' + (err.message || 'Küldés sikertelen.');
 					})
 					.finally(function () {
 						btn.disabled = false;
