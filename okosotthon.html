@@ -4436,6 +4436,49 @@
 					});
 				});
 			});
+			
+			(function () {
+				var form = document.getElementById('uzenet_form');
+				if (!form) return;
+
+				var msgEl = document.getElementById('uzenet_uzenet');
+				var btn = document.getElementById('uzenet_kuldes_btn');
+
+				form.addEventListener('submit', function (e) {
+					e.preventDefault();
+					if (!msgEl || !btn) return;
+
+					var honeypot = form.querySelector('[name="botcheck"]');
+					if (honeypot && honeypot.checked) return;
+
+					btn.disabled = true;
+					btn.textContent = 'Küldés folyamatban…';
+
+					var payload = Object.fromEntries(new FormData(form));
+
+					fetch('https://api.web3forms.com/submit', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+						body: JSON.stringify(payload)
+					})
+					.then(function (res) { return res.json(); })
+					.then(function (data) {
+						if (data.success) {
+							btn.textContent = 'Üzenet elküldve! Hamarosan jelentkezünk.';
+							form.reset();
+						} else {
+							btn.textContent = 'Hiba: ' + (data.message || 'Ismeretlen hiba');
+						}
+					})
+					.catch(function (err) {
+						console.error(err);
+						btn.textContent = 'Hiba: ' + (err.message || 'Küldés sikertelen.');
+					})
+					.finally(function () {
+						btn.disabled = false;
+					});
+				});
+			})();
 		};
 
 		// Update offset on every window resize
